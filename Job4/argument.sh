@@ -1,2 +1,3 @@
 #!/bin/bash
-cp $1 $2
+cat $2
+cp $2 $1
