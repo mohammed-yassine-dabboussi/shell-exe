@@ -1,7 +1,20 @@
 #!/bin/bash
-cat Shell_Userlist.csv > droit.txt
-nbr_lignes= wc -l droit.txt
-for ((a=2; a = nbr_lignes; a++))
+cd ~/Bureau/shell-exe/job9
+cat home/yassine/Bureau/shell-exe/job9/Shell_Userlist.csv | while read varligne
 do
-	cat  >> test_$a.txt
-done
+	password=`echo $varligne |cut -d ',' -f4`
+	username=`echo $varligne | cut -d ',' -f2`
+	username=`echo ${username,,}`
+	role=`echo $varligne |cut -d ',' -f5` 
+	echo $role
+	if [ ${role:0:5} = "Admin" ]
+	then
+		echo "creation de l'utilisateur : $username"
+		sudo adduser -m -$username -p $password
+		echo "changement de rôle de : $username"
+		sudo usermod -aG sudo $username
+	else
+		echo "creation de l'utilisateur : $username"
+		sudo adduser -m $username -p $password
+	fi		
+done < <(tail -n +2 Shell_Userlist.csv)
